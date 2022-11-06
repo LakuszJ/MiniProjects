@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -9,9 +10,11 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+
 
 namespace ChristmasTreeWPF
 {
@@ -20,10 +23,19 @@ namespace ChristmasTreeWPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        private TreeStrip treeStrip;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            treeStrip = new TreeStrip(this);
+            treeStrip.notifyIcon.ShowBalloonTip(3000);
+
+            Storyboard storyboard = this.Resources["scenChangeTree"] as Storyboard;
+            storyboard.Begin();
         }
+
 
         #region WindowMove
         private bool isMoving = false;
@@ -61,14 +73,57 @@ namespace ChristmasTreeWPF
         }
         #endregion
 
+        private bool endingAnimationDisapering = false;
+
         private void chTree_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-
+            if (e.Key == Key.Escape)
+            {
+                this.Close();
+            }
         }
 
         private void chTree_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            if (!endingAnimationDisapering)
+            {
+                Storyboard storyboard = this.Resources["scenClosingWindow"] as Storyboard;
+                storyboard.Begin();
+                e.Cancel = true;
+            }
         }
+
+        private void Storyboard_Completed(object sender, EventArgs e)
+        {
+            endingAnimationDisapering = true;
+            Close();
+            treeStrip.Dispose();
+        }
+
+        private void DoubleAnimation_Completed(object sender, EventArgs e)
+        {
+            ChangeImage();
+            Storyboard storyboard = this.Resources["scenChangeTree"] as Storyboard;
+            storyboard.Begin();
+        }
+
+        private int treeNo = 2;
+
+
+        private void ChangeImage()
+        {
+            string filename = "pngegg" + treeNo + ".png";
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = new Uri(filename, UriKind.Relative);
+            image.EndInit();
+            img.Source = image;
+            treeNo++;
+            if (treeNo > 4)
+            {
+                treeNo = 1;
+            }
+        }
+
     }
 }

@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChristmasTreeWPF"
         mc:Ignorable="d"
-                Title="chTree" Height="500" Width="400"
+        Title="chTree" Height="500" Width="400"
         WindowStyle="None" ShowInTaskbar="False"
-        Opacity="0.90" Background="{x:Null}" AllowsTransparency="True"
+         Background="{x:Null}" AllowsTransparency="True"
         
         MouseDown="chTree_MouseDown" MouseMove="chTree_MouseMove" MouseUp="chTree_MouseUp"
         PreviewKeyDown="chTree_PreviewKeyDown" Closing="chTree_Closing"
@@ -18,14 +18,24 @@
             <DoubleAnimation Storyboard.TargetName="chTree"
                              Storyboard.TargetProperty="Opacity"
                              Duration="0:0:1" To="0" RepeatBehavior="1x"
-                             AutoReverse="False"/>
+                             AutoReverse="False"
+                             />
+        </Storyboard>
+        <Storyboard x:Key="scenChangeTree">
+            <DoubleAnimation Storyboard.TargetName="img"
+                             Storyboard.TargetProperty="Opacity"
+                             Duration="0:0:0.5"  RepeatBehavior="1x"
+                             AutoReverse="False"
+                             Completed="DoubleAnimation_Completed"
+                             />
         </Storyboard>
     </Window.Resources>
     
     <Grid>
-        <Image x:Name="img1" Source="pngegg1.png"
-               Margin="0"
-               Opacity="0.90"/>
+        <Image x:Name="img" Source="pngegg1.png"
+               Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center"
+               Opacity="0.80"
+               />
     </Grid>
     
 </Window>
